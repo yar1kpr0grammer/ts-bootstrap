@@ -1,0 +1,17 @@
+{
+  "author": "",
+  "dependencies": {
+    "typescript": "^5.9.3"
+  },
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "main": "index.js",
+  "name": "bin",
+  "scripts": {
+    "start": "npx tsc \u0026\u0026 node dist/index.js",
+    "test": "echo \"Error: no test specified\" \u0026\u0026 exit 1"
+  },
+  "type": "commonjs",
+  "version": "1.0.0"
+}

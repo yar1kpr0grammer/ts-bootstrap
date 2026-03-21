@@ -36,19 +36,35 @@ func Run(outputSettings Output, name string, args ...string) error {
 	return cmd.Run()
 }
 
-func redText(text string) string {
-	return fmt.Sprintf("\033[31m%s\033[0m", text)
-}
+const (
+	Red   = 31
+	Green = 32
+	Cyan  = 36
+)
 
-func greenText(text string) string {
-	return fmt.Sprintf("\033[32m%s\033[0m", text)
+// func RedText(text string) string {
+// 	red := 31
+// 	return ColorText(text, red)
+// }
+
+// func GreenText(text string) string {
+// 	green := 32
+// 	return ColorText(text, green)
+// }
+// func CyanText(text string) string {
+// 	cyan := 36
+// 	return ColorText(text, cyan)
+// }
+
+func ColorText(text string, escapeCode int) string {
+	return fmt.Sprintf("\033[%dm%s\033[0m", escapeCode, text)
 }
 
 func Confirm(err error, message string) {
 	if err != nil {
-		fmt.Println(redText("Fail:"), message, err)
+		fmt.Println(ColorText("Fail:", Red), message, err)
 	} else {
-		fmt.Println(greenText("Success:"), message)
+		fmt.Println(ColorText("Success:", Green), message)
 	}
 }
 

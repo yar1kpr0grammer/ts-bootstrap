@@ -1,8 +1,4 @@
-package main
 
-var indexFileContent = "console.log(\"Hello, world!\")"
-var readMeContent = "Чтобы запустить: `npm start`\n\n[Исходный код](https://github.com/yar1kpr0grammer)"
-var tsconfigContent = `
 {
  "compilerOptions": {
    // File Layout
@@ -33,4 +29,3 @@ var tsconfigContent = `
  }
 }
 
-`
