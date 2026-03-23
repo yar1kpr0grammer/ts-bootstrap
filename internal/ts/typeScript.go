@@ -3,7 +3,7 @@ package ts
 import (
 	"os"
 	"path/filepath"
-	"tsBootstrup/src/cmd"
+	"tsBootstrup/internal/cmd"
 )
 
 func Init(outputMode cmd.Output) error {
@@ -13,7 +13,7 @@ func Init(outputMode cmd.Output) error {
 	return err
 }
 
-func UpdateConfig(path string, text string) error {
+func SetConfig(path string, text string) error {
 	err := os.WriteFile(path, []byte(text), 0644)
 	cmd.Confirm(err, "update tsconfig.json")
 	return err

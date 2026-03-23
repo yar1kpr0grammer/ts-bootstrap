@@ -1,6 +1,6 @@
 package git
 
-import "tsBootstrup/src/cmd"
+import "tsBootstrup/internal/cmd"
 
 func Init() error {
 	err := initRepo()

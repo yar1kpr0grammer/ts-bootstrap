@@ -3,7 +3,7 @@ package npm
 import (
 	"encoding/json"
 	"os"
-	"tsBootstrup/src/cmd"
+	"tsBootstrup/internal/cmd"
 )
 
 func Init(outputMode cmd.Output) error {

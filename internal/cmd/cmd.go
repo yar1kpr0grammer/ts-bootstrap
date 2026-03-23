@@ -46,6 +46,11 @@ func Confirm(err error, message string) {
 	fmt.Println(prefix, message)
 }
 
+func Warn(message string) {
+	prefix := color.YellowString("Warning:")
+	fmt.Println(prefix, message)
+}
+
 func Input(prompt string) string {
 	fmt.Print(prompt)
 	inp, err := reader.ReadString('\n')
