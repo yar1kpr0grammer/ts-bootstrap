@@ -84,6 +84,11 @@ func main() {
 		cmd.PressEnter()
 		return
 	}
+	if err := utils.CheckASCIIPath(); err != nil {
+		cmd.Confirm(err, "Invalid project path for npm")
+		cmd.PressEnter()
+		return
+	}
 	args := cmd.GetArgs()
 
 	// Eсли пользователь просто запустил бинарь
