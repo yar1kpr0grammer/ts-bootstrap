@@ -1,10 +1,13 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"sync"
 	"time"
+
+	"github.com/fatih/color"
 
 	"tsBootstrup/src/cmd"
 	"tsBootstrup/src/git"
@@ -67,14 +70,20 @@ func initProject() {
 	}
 
 	// 6. финальный лог
+	prefix := color.CyanString("Ended for:")
 	elapsed := time.Since(start).Round(time.Millisecond)
-	timeInfo := fmt.Sprintf("Ended for %v", elapsed)
-	fmt.Println(cmd.ColorText(timeInfo, cmd.Cyan))
+	fmt.Println(prefix, elapsed)
 
 	utils.ShowInfo()
 }
 
 func main() {
+	if utils.FileExists(blockadeFileName) {
+		err := errors.New("BLOCKADE FILE FOUND")
+		cmd.Confirm(err, blockadeMessage)
+		cmd.PressEnter()
+		return
+	}
 	args := cmd.GetArgs()
 
 	// Eсли пользователь просто запустил бинарь

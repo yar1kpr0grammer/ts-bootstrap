@@ -6,6 +6,8 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/fatih/color"
 )
 
 type Output struct {
@@ -36,36 +38,12 @@ func Run(outputSettings Output, name string, args ...string) error {
 	return cmd.Run()
 }
 
-const (
-	Red   = 31
-	Green = 32
-	Cyan  = 36
-)
-
-// func RedText(text string) string {
-// 	red := 31
-// 	return ColorText(text, red)
-// }
-
-// func GreenText(text string) string {
-// 	green := 32
-// 	return ColorText(text, green)
-// }
-// func CyanText(text string) string {
-// 	cyan := 36
-// 	return ColorText(text, cyan)
-// }
-
-func ColorText(text string, escapeCode int) string {
-	return fmt.Sprintf("\033[%dm%s\033[0m", escapeCode, text)
-}
-
 func Confirm(err error, message string) {
+	prefix := color.GreenString("Success:")
 	if err != nil {
-		fmt.Println(ColorText("Fail:", Red), message, err)
-	} else {
-		fmt.Println(ColorText("Success:", Green), message)
+		prefix = color.RedString("Fail:")
 	}
+	fmt.Println(prefix, message)
 }
 
 func Input(prompt string) string {
@@ -90,4 +68,12 @@ func Ask(prompt string) bool {
 	default:
 		return false
 	}
+}
+
+func PressEnter() bool {
+	fmt.Print("Press enter to continue...")
+	var b [1]byte
+	os.Stdin.Read(b[:])
+	fmt.Println()
+	return true
 }

@@ -1,9 +1,12 @@
 package main
 
-var indexFileContent = "console.log(\"Hello, world!\")"
+var blockadeFileName = ".block_ts"
+var blockadeMessage = "tsBootstrup is blocked in this directory"
+var indexFileContent = `let message:string = "Hello world"
+console.log(message)
+`
 var readMeContent = "Чтобы запустить: `npm start`\n\n[Исходный код](https://github.com/yar1kpr0grammer)"
-var tsconfigContent = `
-{
+var tsconfigContent = `{
  "compilerOptions": {
    // File Layout
    "rootDir": "./src",

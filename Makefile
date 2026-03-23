@@ -8,6 +8,7 @@ BIN_DIR := bin
 
 fmt:
 	go fmt ./...
+	go mod tidy
 
 build: linux windows
 
