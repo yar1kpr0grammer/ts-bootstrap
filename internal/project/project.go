@@ -1,6 +1,7 @@
 package project
 
 import (
+	"os"
 	"sync"
 
 	"tsBootstrup/internal/cmd"
@@ -17,6 +18,19 @@ type Settings struct {
 }
 
 func Init(s Settings) error {
+	isempty, err := isEmpty()
+	if err != nil {
+		return err
+	}
+	if !isempty {
+		if cmd.Ask("Directory is not empty. Continue?") {
+			if err := Remove(); err != nil {
+				return err
+			}
+			cmd.Confirm(nil, "clear directory")
+		}
+	}
+
 	var wg sync.WaitGroup
 
 	// 1. npm init (синхронно, обязательно первым)
@@ -50,5 +64,55 @@ func Init(s Settings) error {
 		utils.CreateReadMe(config.ReadMeContent)
 	}
 
+	return nil
+}
+
+func isEmpty() (bool, error) {
+	exeName, err := utils.ThisFile()
+	if err != nil {
+		return false, err
+	}
+
+	context, err := os.ReadDir(".")
+	if err != nil {
+		cmd.Confirm(err, "read current directory")
+		return false, err
+	}
+
+	for _, file := range context {
+		name := file.Name()
+
+		// если нашли НЕ служебный файл -> папка не пустая
+		if name != exeName && name != config.BlockadeFileName {
+			return false, nil
+		}
+	}
+
+	return true, nil
+}
+
+func Remove() error {
+	content, err := os.ReadDir(".")
+	if err != nil {
+		cmd.Confirm(err, "read current directory")
+		return err
+	}
+
+	exeName, err := utils.ThisFile()
+	if err != nil {
+		return err
+	}
+
+	for _, file := range content {
+		if file.Name() == exeName {
+			continue
+		}
+
+		if err := os.RemoveAll(file.Name()); err != nil {
+			return err
+		}
+	}
+
+	cmd.Confirm(nil, "removed all files (except self)")
 	return nil
 }

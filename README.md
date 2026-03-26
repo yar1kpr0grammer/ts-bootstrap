@@ -56,6 +56,7 @@ tsbootstrap r
 | ------------ | ----- | ------------------------- |
 | `--init`     | `-i`  | Create a new project      |
 | `--run`      | `-r`  | Run the project           |
+| `--clear`    | `-c`  | Clear current directory   |
 | `--git`      | `-g`  | Initialize git repository |
 | `--noReadme` | -     | Skip README creation      |
 

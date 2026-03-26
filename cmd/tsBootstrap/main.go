@@ -16,6 +16,7 @@ type Flags struct {
 	Run      bool
 	UseGit   bool
 	NoReadme bool
+	Clear    bool
 }
 
 func parseFlags() Flags {
@@ -23,6 +24,9 @@ func parseFlags() Flags {
 
 	flag.BoolVar(&f.Init, "init", false, "create project without prompt")
 	flag.BoolVar(&f.Init, "i", false, "create project without prompt")
+
+	flag.BoolVar(&f.Clear, "clear", false, "clear current directory")
+	flag.BoolVar(&f.Clear, "c", false, "clear current directory")
 
 	flag.BoolVar(&f.Run, "run", false, "run project")
 	flag.BoolVar(&f.Run, "r", false, "run project")
@@ -64,25 +68,38 @@ func main() {
 		cmd.Warn(err.Error())
 	}
 
+	// run mode
+	if f.Run {
+		npm.RunProject(cmd.ShowAll)
+		return
+	}
+
+	// clear mode
+	if f.Clear {
+		if cmd.Ask("Do you want to clear current diectory?") {
+			if err := project.Remove(); err != nil {
+				mustStop(err, "remove current directory")
+			}
+		}
+		return
+	}
+
+	// Init mode
 	settings := project.Settings{
 		UseGit:       f.UseGit,
 		CreateReadme: !f.NoReadme,
 	}
 
-	args := cmd.GetArgs()
-
-	// no args -> interactive mode
-	if len(args) == 0 {
-		if cmd.Ask("Do you want to create a project?") {
-			_ = utils.MeasureTimeErr("Init", func() error {
-				return project.Init(settings)
-			})
-		}
+	if f.Init {
+		utils.MeasureTimeErr("Init", func() error {
+			return project.Init(settings)
+		})
 		return
 	}
 
-	// run mode
-	if f.Run {
-		npm.RunProject(cmd.ShowAll)
+	if cmd.Ask("Do you want to create a project?") {
+		utils.MeasureTimeErr("Init", func() error {
+			return project.Init(settings)
+		})
 	}
 }
