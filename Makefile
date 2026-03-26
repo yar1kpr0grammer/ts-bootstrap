@@ -22,11 +22,26 @@ build-linux:
 
 build-windows:
 	mkdir -p $(BIN_DIR)
-	GOOS=windows GOARCH=amd64 go build -o $(BIN_DIR)/$(APP).exe $(MAIN)
+	GOOS=windows GOARCH=amd64 go build -o $(BIN_DIR)/$(APP)-windows.exe $(MAIN)
 
 build-mac:
 	mkdir -p $(BIN_DIR)
 	GOOS=darwin GOARCH=amd64 go build -o $(BIN_DIR)/$(APP)-mac $(MAIN)
+
+# --- release ---
+release: fmt tidy release-linux release-windows release-mac
+
+release-linux:
+	mkdir -p $(BIN_DIR)/release
+	GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o $(BIN_DIR)/release/$(APP)-linux $(MAIN)
+
+release-windows:
+	mkdir -p $(BIN_DIR)/release
+	GOOS=windows GOARCH=amd64 go build -ldflags="-w -s" -o $(BIN_DIR)/release/$(APP)-windows.exe $(MAIN)
+
+release-mac:
+	mkdir -p $(BIN_DIR)/release
+	GOOS=darwin GOARCH=amd64 go build -ldflags="-w -s" -o $(BIN_DIR)/release/$(APP)-mac $(MAIN)
 
 # --- run ---
 run: fmt
