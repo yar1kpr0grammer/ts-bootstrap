@@ -29,10 +29,17 @@ func hasNonASCII(s string) bool {
 }
 
 func ValidateASCIIPath(path string) error {
-	for _, part := range strings.Split(path, string(os.PathSeparator)) {
-		if hasNonASCII(part) {
-			return fmt.Errorf("invalid path part: %q", part)
-		}
+	// for _, part := range strings.Split(path, string(os.PathSeparator)) {
+	// 	if hasNonASCII(part) {
+	// 		return fmt.Errorf("invalid path part: %q", part)
+	// 	}
+	// }
+	// return nil
+	//
+	parts := strings.Split(path, "/")
+	currentDir := parts[len(parts)-1]
+	if hasNonASCII(currentDir) {
+		return fmt.Errorf("invalid path part: %q", currentDir)
 	}
 	return nil
 }

@@ -15,7 +15,8 @@ var TsconfigContent = `{
    // Environment Settings
    "module": "nodenext",
    "target": "esnext",
-   "types": [],
+   "types": ["node"],
+   "type": "module",
 
    // Other Outputs
    "sourceMap": true,

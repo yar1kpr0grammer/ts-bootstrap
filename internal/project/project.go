@@ -1,11 +1,7 @@
 package project
 
 import (
-	"fmt"
 	"sync"
-	"time"
-
-	"github.com/fatih/color"
 
 	"tsBootstrup/internal/cmd"
 	"tsBootstrup/internal/config"
@@ -21,7 +17,6 @@ type Settings struct {
 }
 
 func Init(s Settings) error {
-	start := time.Now()
 	var wg sync.WaitGroup
 
 	// 1. npm init (синхронно, обязательно первым)
@@ -54,10 +49,6 @@ func Init(s Settings) error {
 	if s.CreateReadme {
 		utils.CreateReadMe(config.ReadMeContent)
 	}
-
-	prefix := color.CyanString("Ended for:")
-	elapsed := time.Since(start).Round(time.Millisecond)
-	fmt.Println(prefix, elapsed)
 
 	return nil
 }
