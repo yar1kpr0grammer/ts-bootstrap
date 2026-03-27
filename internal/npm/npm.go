@@ -18,7 +18,13 @@ func Install(outputMode cmd.Output, pkg string) error {
 	return err
 }
 
-func UpdatePackageJSON() error {
+func DevInstall(outputMode cmd.Output, pkg string) error {
+	err := cmd.Run(outputMode, "npm", "i", "-D", pkg)
+	cmd.Confirm(err, "npm i "+pkg)
+	return err
+}
+
+func UpdatePackageJSON(nodeType string) error {
 	data, err := os.ReadFile("package.json")
 	if err != nil {
 		cmd.Confirm(err, "read package.json")
@@ -27,7 +33,7 @@ func UpdatePackageJSON() error {
 
 	var pkg map[string]any
 	json.Unmarshal(data, &pkg)
-
+	pkg["type"] = nodeType
 	scripts, ok := pkg["scripts"].(map[string]any)
 	if !ok {
 		scripts = make(map[string]any)

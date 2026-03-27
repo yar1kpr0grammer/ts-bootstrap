@@ -2,6 +2,8 @@ package config
 
 var BlockadeFileName = ".block_ts"
 var BlockadeMessage = "tsBootstrup is blocked in this directory"
+
+var NodeType = "module"
 var IndexFileContent = `let message:string = "Hello world"
 console.log(message)
 `
@@ -16,7 +18,6 @@ var TsconfigContent = `{
    "module": "nodenext",
    "target": "esnext",
    "types": ["node"],
-   "type": "module",
 
    // Other Outputs
    "sourceMap": true,

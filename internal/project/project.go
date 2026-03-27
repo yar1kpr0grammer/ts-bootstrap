@@ -42,6 +42,7 @@ func Init(s Settings) error {
 	go func() {
 		defer wg.Done()
 		npm.Install(cmd.ShowOnlyErrors, "typescript")
+		npm.DevInstall(cmd.ShowOnlyErrors, "@types/node")
 	}()
 
 	go func() {
@@ -54,7 +55,7 @@ func Init(s Settings) error {
 	// 3. зависимые шаги
 	ts.Init(cmd.ShowOnlyErrors)
 	ts.SetConfig("tsconfig.json", config.TsconfigContent)
-	npm.UpdatePackageJSON()
+	npm.UpdatePackageJSON(config.NodeType)
 
 	if s.UseGit {
 		git.Init()
