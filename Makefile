@@ -1,6 +1,7 @@
 APP := tsBootstrap
 BIN_DIR := bin
 MAIN := ./cmd/tsBootstrap
+MAIN_GUI := ./cmd/tsBootstrap_gui
 
 .DEFAULT_GOAL := build
 
@@ -43,6 +44,9 @@ release-mac:
 	mkdir -p $(BIN_DIR)/release
 	GOOS=darwin GOARCH=amd64 go build -ldflags="-w -s" -o $(BIN_DIR)/release/$(APP)-mac $(MAIN)
 
+release-gui:
+	mkdir -p $(BIN_DIR)/release/gui
+	GOOS=darwin GOARCH=amd64 go build -ldflags="-w -s" -o $(BIN_DIR)/release/gui/$(APP) $(MAIN_GUI)
 # --- run ---
 run: fmt
 	go run $(MAIN)

@@ -18,7 +18,7 @@ type Settings struct {
 }
 
 func Init(s Settings) error {
-	isempty, err := isEmpty()
+	isempty, err := IsEmpty()
 	if err != nil {
 		return err
 	}
@@ -67,8 +67,13 @@ func Init(s Settings) error {
 
 	return nil
 }
-
-func isEmpty() (bool, error) {
+func Exists() bool {
+	if utils.FileExists("src/index.ts") && utils.FileExists("package.json") {
+		return true
+	}
+	return false
+}
+func IsEmpty() (bool, error) {
 	exeName, err := utils.ThisFile()
 	if err != nil {
 		return false, err
