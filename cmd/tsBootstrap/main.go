@@ -50,6 +50,12 @@ func mustStop(err error, msg string) bool {
 	cmd.PressEnter()
 	return true
 }
+func measuteProjectInit(settings project.Settings) {
+	utils.MeasureTimeErr("Init", func() error {
+		return project.Init(settings)
+	})
+
+}
 
 func main() {
 	f := parseFlags()
@@ -91,15 +97,11 @@ func main() {
 	}
 
 	if f.Init {
-		utils.MeasureTimeErr("Init", func() error {
-			return project.Init(settings)
-		})
+		measuteProjectInit(settings)
 		return
 	}
 
 	if cmd.Ask("Do you want to create a project?") {
-		utils.MeasureTimeErr("Init", func() error {
-			return project.Init(settings)
-		})
+		measuteProjectInit(settings)
 	}
 }

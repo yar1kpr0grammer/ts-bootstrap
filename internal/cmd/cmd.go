@@ -63,12 +63,16 @@ func Input(prompt string) string {
 
 }
 
+func Error(err error) {
+	color.Red(err.Error())
+}
+
 func Ask(prompt string) bool {
 	new_prompt := prompt + " [y/n]: "
 	inp := Input(new_prompt)
 	inp = strings.ToLower(inp)
 	switch inp {
-	case "y":
+	case "y", "yes":
 		return true
 	default:
 		return false

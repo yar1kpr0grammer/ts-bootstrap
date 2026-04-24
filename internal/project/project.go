@@ -1,6 +1,7 @@
 package project
 
 import (
+	"fmt"
 	"os"
 	"sync"
 
@@ -18,45 +19,153 @@ type Settings struct {
 }
 
 func Init(s Settings) error {
-	isempty, err := isEmpty()
+	name, err := prepareProjectDir()
 	if err != nil {
 		return err
 	}
-	if !isempty {
-		if cmd.Ask("Directory is not empty. Continue?") {
+
+	if err := ensureDirectoryReady(); err != nil {
+		return err
+	}
+
+	if err := initBaseProject(); err != nil {
+		return err
+	}
+
+	if err := createFiles(); err != nil {
+		return err
+	}
+
+	if err := applyOptionalFeatures(s); err != nil {
+		return err
+	}
+
+	printPostInfo(name)
+	return nil
+}
+
+func prepareProjectDir() (string, error) {
+	name := cmd.Input(`How to name a project? (Type "." for current dir): `)
+
+	if name == "" {
+		name = "."
+	}
+
+	// current directory
+	if name == "." {
+		return ".", os.Chdir(".")
+	}
+
+	info, err := os.Stat(name)
+
+	// папка не существует -> создаём
+	if os.IsNotExist(err) {
+		if err := os.Mkdir(name, 0755); err != nil {
+			return "", err
+		}
+
+		if err := os.Chdir(name); err != nil {
+			return "", err
+		}
+
+		cmd.Confirm(nil, "created project directory")
+		return name, nil
+	}
+
+	// другая ошибка доступа и т.д.
+	if err != nil {
+		return "", err
+	}
+
+	// существует, но это файл
+	if !info.IsDir() {
+		return "", fmt.Errorf("%s exists and is not a directory", name)
+	}
+
+	// существует папка -> заходим
+	if err := os.Chdir(name); err != nil {
+		return "", err
+	}
+
+	cmd.Warn("directory already exists")
+
+	empty, err := isEmpty()
+	if err != nil {
+		return "", err
+	}
+
+	if !empty {
+		if cmd.Ask("Directory contains files. Clear it?") {
 			if err := Remove(); err != nil {
-				return err
+				return "", err
 			}
-			cmd.Confirm(nil, "clear directory")
+			cmd.Confirm(nil, "directory cleaned")
+		} else {
+			return "", fmt.Errorf("directory is not empty")
 		}
 	}
 
-	var wg sync.WaitGroup
+	return name, nil
+}
 
-	// 1. npm init (синхронно, обязательно первым)
+func ensureDirectoryReady() error {
+	empty, err := isEmpty()
+	if err != nil {
+		return err
+	}
+
+	if empty {
+		return nil
+	}
+
+	if !cmd.Ask("Directory is not empty. Continue?") {
+		return fmt.Errorf("operation cancelled")
+	}
+
+	return Remove()
+}
+
+func initBaseProject() error {
 	npm.Init(cmd.ShowOnlyErrors)
+	return nil
+}
 
-	// 2. параллельные задачи
+func createFiles() error {
+	var wg sync.WaitGroup
 	wg.Add(2)
 
 	go func() {
 		defer wg.Done()
-		npm.Install(cmd.ShowOnlyErrors, "typescript")
-		npm.DevInstall(cmd.ShowOnlyErrors, "@types/node")
+		installDependencies()
 	}()
 
 	go func() {
 		defer wg.Done()
-		ts.CreateIndexFile(config.IndexFileContent)
+		createSourceFiles()
 	}()
 
 	wg.Wait()
 
-	// 3. зависимые шаги
+	return finalizeTypescript()
+}
+
+func installDependencies() {
+	npm.Install(cmd.ShowOnlyErrors, "typescript")
+	npm.DevInstall(cmd.ShowOnlyErrors, "@types/node")
+}
+
+func createSourceFiles() {
+	ts.CreateIndexFile(config.IndexFileContent)
+}
+
+func finalizeTypescript() error {
 	ts.Init(cmd.ShowOnlyErrors)
 	ts.SetConfig("tsconfig.json", config.TsconfigContent)
 	npm.UpdatePackageJSON(config.NodeType)
+	return nil
+}
 
+func applyOptionalFeatures(s Settings) error {
 	if s.UseGit {
 		git.Init()
 	}
@@ -68,22 +177,32 @@ func Init(s Settings) error {
 	return nil
 }
 
+func printPostInfo(name string) {
+	fmt.Println("----------------")
+	fmt.Println("Now:")
+
+	if name != "." && name != "" {
+		fmt.Printf("cd %s\n", name)
+	}
+
+	fmt.Println("npm start")
+	fmt.Println("----------------")
+}
+
 func isEmpty() (bool, error) {
 	exeName, err := utils.ThisFile()
 	if err != nil {
 		return false, err
 	}
 
-	context, err := os.ReadDir(".")
+	files, err := os.ReadDir(".")
 	if err != nil {
-		cmd.Confirm(err, "read current directory")
 		return false, err
 	}
 
-	for _, file := range context {
+	for _, file := range files {
 		name := file.Name()
 
-		// если нашли НЕ служебный файл -> папка не пустая
 		if name != exeName && name != config.BlockadeFileName {
 			return false, nil
 		}
@@ -93,9 +212,8 @@ func isEmpty() (bool, error) {
 }
 
 func Remove() error {
-	content, err := os.ReadDir(".")
+	files, err := os.ReadDir(".")
 	if err != nil {
-		cmd.Confirm(err, "read current directory")
 		return err
 	}
 
@@ -104,7 +222,7 @@ func Remove() error {
 		return err
 	}
 
-	for _, file := range content {
+	for _, file := range files {
 		if file.Name() == exeName {
 			continue
 		}
