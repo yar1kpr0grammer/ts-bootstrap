@@ -58,6 +58,7 @@ tsbootstrap r
 | `--run`      | `-r`  | Run the project           |
 | `--clear`    | `-c`  | Clear current directory   |
 | `--git`      | `-g`  | Initialize git repository |
+| `--lang`     | `-l`  | Choose cli lang en/ru     |
 | `--noReadme` | -     | Skip README creation      |
 
 ---
@@ -75,5 +76,5 @@ tsbootstrap r
 ```bash
 tsbootstrap init --git
 cd my-project
-tsbootstrap run
+npm start
 ```

@@ -8,6 +8,8 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
+
+	"tsBootstrup/internal/languages"
 )
 
 type Output struct {
@@ -15,14 +17,21 @@ type Output struct {
 	ShowErrors bool
 }
 
-var ShowOnlyErrors = Output{ShowInfo: false, ShowErrors: true}
-var ShowAll = Output{ShowInfo: true, ShowErrors: true}
+var ShowOnlyErrors = Output{
+	ShowInfo:   false,
+	ShowErrors: true,
+}
+
+var ShowAll = Output{
+	ShowInfo:   true,
+	ShowErrors: true,
+}
+
+var reader = bufio.NewReader(os.Stdin)
 
 func GetArgs() []string {
 	return os.Args[1:]
 }
-
-var reader = bufio.NewReader(os.Stdin)
 
 func Run(outputSettings Output, name string, args ...string) error {
 	cmd := exec.Command(name, args...)
@@ -39,28 +48,30 @@ func Run(outputSettings Output, name string, args ...string) error {
 }
 
 func Confirm(err error, message string) {
-	prefix := color.GreenString("Success:")
+	prefix := color.GreenString(languages.Get("success_prefix"))
+
 	if err != nil {
-		prefix = color.RedString("Fail:")
+		prefix = color.RedString(languages.Get("fail_prefix"))
 	}
+
 	fmt.Println(prefix, message)
 }
 
 func Warn(message string) {
-	prefix := color.YellowString("Warning:")
+	prefix := color.YellowString(languages.Get("warning_prefix"))
 	fmt.Println(prefix, message)
 }
 
 func Input(prompt string) string {
 	fmt.Print(prompt)
+
 	inp, err := reader.ReadString('\n')
 	if err != nil {
-		fmt.Println("Input error:", err)
+		fmt.Println(languages.Get("input_error"), err)
 		return ""
 	}
-	inp = strings.TrimSpace(inp)
-	return inp
 
+	return strings.TrimSpace(inp)
 }
 
 func Error(err error) {
@@ -68,11 +79,13 @@ func Error(err error) {
 }
 
 func Ask(prompt string) bool {
-	new_prompt := prompt + " [y/n]: "
-	inp := Input(new_prompt)
-	inp = strings.ToLower(inp)
+	fullPrompt := prompt + " " + languages.Get("yes_no_suffix")
+
+	inp := Input(fullPrompt)
+	inp = strings.ToLower(strings.TrimSpace(inp))
+
 	switch inp {
-	case "y", "yes":
+	case "y", "yes", "д", "да":
 		return true
 	default:
 		return false
@@ -80,9 +93,11 @@ func Ask(prompt string) bool {
 }
 
 func PressEnter() bool {
-	fmt.Print("Press enter to continue...")
+	fmt.Print(languages.Get("press_enter"))
+
 	var b [1]byte
 	os.Stdin.Read(b[:])
+
 	fmt.Println()
 	return true
 }

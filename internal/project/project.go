@@ -8,6 +8,7 @@ import (
 	"tsBootstrup/internal/cmd"
 	"tsBootstrup/internal/config"
 	"tsBootstrup/internal/git"
+	"tsBootstrup/internal/languages"
 	"tsBootstrup/internal/npm"
 	"tsBootstrup/internal/ts"
 	"tsBootstrup/internal/utils"
@@ -45,49 +46,44 @@ func Init(s Settings) error {
 }
 
 func prepareProjectDir() (string, error) {
-	name := cmd.Input(`How to name a project? (Type "." for current dir): `)
+	name := cmd.Input(languages.Get("ask_project_name"))
 
 	if name == "" {
 		name = "."
 	}
 
-	// current directory
 	if name == "." {
 		return ".", os.Chdir(".")
 	}
 
 	info, err := os.Stat(name)
 
-	// папка не существует -> создаём
 	if os.IsNotExist(err) {
 		if err := os.Mkdir(name, 0755); err != nil {
-			return "", err
+			return "", fmt.Errorf("%s: %w", languages.Get("error_create_dir"), err)
 		}
 
 		if err := os.Chdir(name); err != nil {
-			return "", err
+			return "", fmt.Errorf("%s: %w", languages.Get("error_open_dir"), err)
 		}
 
-		cmd.Confirm(nil, "created project directory")
+		cmd.Confirm(nil, languages.Get("created_project_dir"))
 		return name, nil
 	}
 
-	// другая ошибка доступа и т.д.
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("%s: %w", languages.Get("error_check_dir"), err)
 	}
 
-	// существует, но это файл
 	if !info.IsDir() {
-		return "", fmt.Errorf("%s exists and is not a directory", name)
+		return "", fmt.Errorf("%s", languages.Get("error_not_directory"))
 	}
 
-	// существует папка -> заходим
 	if err := os.Chdir(name); err != nil {
-		return "", err
+		return "", fmt.Errorf("%s: %w", languages.Get("error_open_dir"), err)
 	}
 
-	cmd.Warn("directory already exists")
+	cmd.Warn(languages.Get("directory_exists"))
 
 	empty, err := isEmpty()
 	if err != nil {
@@ -95,13 +91,14 @@ func prepareProjectDir() (string, error) {
 	}
 
 	if !empty {
-		if cmd.Ask("Directory contains files. Clear it?") {
+		if cmd.Ask(languages.Get("ask_clear_dir")) {
 			if err := Remove(); err != nil {
 				return "", err
 			}
-			cmd.Confirm(nil, "directory cleaned")
+
+			cmd.Confirm(nil, languages.Get("directory_cleaned"))
 		} else {
-			return "", fmt.Errorf("directory is not empty")
+			return "", fmt.Errorf("%s", languages.Get("error_dir_not_empty"))
 		}
 	}
 
@@ -118,8 +115,8 @@ func ensureDirectoryReady() error {
 		return nil
 	}
 
-	if !cmd.Ask("Directory is not empty. Continue?") {
-		return fmt.Errorf("operation cancelled")
+	if !cmd.Ask(languages.Get("ask_continue_not_empty")) {
+		return fmt.Errorf("%s", languages.Get("error_cancelled"))
 	}
 
 	return Remove()
@@ -179,7 +176,7 @@ func applyOptionalFeatures(s Settings) error {
 
 func printPostInfo(name string) {
 	fmt.Println("----------------")
-	fmt.Println("Now:")
+	fmt.Println(languages.Get("now"))
 
 	if name != "." && name != "" {
 		fmt.Printf("cd %s\n", name)
@@ -192,12 +189,12 @@ func printPostInfo(name string) {
 func isEmpty() (bool, error) {
 	exeName, err := utils.ThisFile()
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("%s: %w", languages.Get("error_get_exe"), err)
 	}
 
 	files, err := os.ReadDir(".")
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("%s: %w", languages.Get("error_read_dir"), err)
 	}
 
 	for _, file := range files {
@@ -214,12 +211,12 @@ func isEmpty() (bool, error) {
 func Remove() error {
 	files, err := os.ReadDir(".")
 	if err != nil {
-		return err
+		return fmt.Errorf("%s: %w", languages.Get("error_read_dir"), err)
 	}
 
 	exeName, err := utils.ThisFile()
 	if err != nil {
-		return err
+		return fmt.Errorf("%s: %w", languages.Get("error_get_exe"), err)
 	}
 
 	for _, file := range files {
@@ -228,10 +225,14 @@ func Remove() error {
 		}
 
 		if err := os.RemoveAll(file.Name()); err != nil {
-			return err
+			return fmt.Errorf("%s %s: %w",
+				languages.Get("error_remove_file"),
+				file.Name(),
+				err,
+			)
 		}
 	}
 
-	cmd.Confirm(nil, "removed all files (except self)")
+	cmd.Confirm(nil, languages.Get("removed_all_files"))
 	return nil
 }

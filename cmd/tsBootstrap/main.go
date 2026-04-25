@@ -3,9 +3,11 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 
 	"tsBootstrup/internal/cmd"
 	"tsBootstrup/internal/config"
+	"tsBootstrup/internal/languages"
 	"tsBootstrup/internal/npm"
 	"tsBootstrup/internal/project"
 	"tsBootstrup/internal/utils"
@@ -17,6 +19,7 @@ type Flags struct {
 	UseGit   bool
 	NoReadme bool
 	Clear    bool
+	Lang     string
 }
 
 func parseFlags() Flags {
@@ -36,40 +39,63 @@ func parseFlags() Flags {
 
 	flag.BoolVar(&f.NoReadme, "noReadme", false, "skip README creation")
 
+	flag.StringVar(&f.Lang, "lang", "", "language: ru / en")
+	flag.StringVar(&f.Lang, "l", "", "language: ru / en")
+
 	flag.Parse()
 
 	return f
 }
 
-func mustStop(err error, msg string) bool {
+func mustStop(err error, msgKey string) bool {
 	if err == nil {
 		return false
 	}
 
-	cmd.Confirm(err, msg)
+	cmd.Confirm(err, languages.Get(msgKey))
 	cmd.PressEnter()
 	return true
 }
-func measuteProjectInit(settings project.Settings) {
-	utils.MeasureTimeErr("Init", func() error {
-		return project.Init(settings)
-	})
 
+func measureProjectInit(settings project.Settings) {
+	utils.MeasureTimeErr(
+		languages.Get("init"),
+		func() error {
+			return project.Init(settings)
+		},
+	)
+}
+
+func initLanguage(lang string) {
+	var err error
+
+	if lang != "" {
+		err = languages.Init(lang)
+	} else {
+		err = languages.AutoInit()
+	}
+
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func main() {
 	f := parseFlags()
 
+	// сначала язык
+	initLanguage(f.Lang)
+
 	if utils.FileExists(config.BlockadeFileName) {
 		cmd.Confirm(
-			fmt.Errorf("blockade file found"),
+			fmt.Errorf(languages.Get("error_blockade_found")),
 			config.BlockadeMessage,
 		)
 		cmd.PressEnter()
 		return
 	}
 
-	// Not ASCII path can break npm init
+	// Non-ASCII path can break npm init
 	if err := utils.CheckPathForNPM(); err != nil {
 		cmd.Warn(err.Error())
 	}
@@ -82,26 +108,26 @@ func main() {
 
 	// clear mode
 	if f.Clear {
-		if cmd.Ask("Do you want to clear current diectory?") {
+		if cmd.Ask(languages.Get("ask_clear_current_dir")) {
 			if err := project.Remove(); err != nil {
-				mustStop(err, "remove current directory")
+				mustStop(err, "error_remove_current_dir")
 			}
 		}
 		return
 	}
 
-	// Init mode
+	// init mode
 	settings := project.Settings{
 		UseGit:       f.UseGit,
 		CreateReadme: !f.NoReadme,
 	}
 
 	if f.Init {
-		measuteProjectInit(settings)
+		measureProjectInit(settings)
 		return
 	}
 
-	if cmd.Ask("Do you want to create a project?") {
-		measuteProjectInit(settings)
+	if cmd.Ask(languages.Get("ask_create_project")) {
+		measureProjectInit(settings)
 	}
 }
