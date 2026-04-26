@@ -1,0 +1,13 @@
+{
+  "name": "@yar1kpr0grammer/ts-bootstrap",
+  "version": "1.0.0",
+  "description": "CLI for quick TypeScript project bootstrap",
+  "bin": {
+    "ts-bootstrap": "./index.js"
+  },
+  "files": [
+    "index.js",
+    "bin/release"
+  ],
+  "license": "MIT"
+}
