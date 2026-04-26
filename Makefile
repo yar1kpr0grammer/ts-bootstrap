@@ -1,4 +1,4 @@
-APP := tsBootstrap
+APP := ts-vibe
 BIN_DIR := bin
 MAIN := ./cmd/tsBootstrap
 

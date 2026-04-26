@@ -1,4 +1,4 @@
-# tsBootstrup
+# ts-vibe
 
 CLI tool for bootstrapping TypeScript projects
 
@@ -20,19 +20,19 @@ CLI tool for bootstrapping TypeScript projects
 ### Create a new project
 
 ```bash
-tsbootstrap init
+npx ts-vibe init
 ```
 
 With Git:
 
 ```bash
-tsbootstrap init --git
+npx ts-vibe init --git
 ```
 
 Skip README creation:
 
 ```bash
-tsbootstrap init --noReadme
+npx ts-vibe init --noReadme
 ```
 
 ---
@@ -40,14 +40,9 @@ tsbootstrap init --noReadme
 ### Run project
 
 ```bash
-tsbootstrap run
+npm start
 ```
 
-or shorthand:
-
-```bash
-tsbootstrap r
-```
 ---
 
 ## 🧠 Flags
@@ -55,7 +50,6 @@ tsbootstrap r
 | Flag         | Alias | Description               |
 | ------------ | ----- | ------------------------- |
 | `--init`     | `-i`  | Create a new project      |
-| `--run`      | `-r`  | Run the project           |
 | `--clear`    | `-c`  | Clear current directory   |
 | `--git`      | `-g`  | Initialize git repository |
 | `--lang`     | `-l`  | Choose cli lang en/ru     |
@@ -65,16 +59,16 @@ tsbootstrap r
 
 ## ⚠️ Requirements
 
-* Go 1.20+
-* Node.js (for running TypeScript projects)
-* Git (optional)
+- Go 1.20+
+- Node.js (for running TypeScript projects)
+- Git (optional)
 
 ---
 
 ## 🛠 Example Workflow
 
 ```bash
-tsbootstrap init --git
+npx ts-vibe init --git --lang=ru
 cd my-project
 npm start
 ```
