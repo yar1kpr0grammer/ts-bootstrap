@@ -3,6 +3,8 @@ package npm
 import (
 	"encoding/json"
 	"os"
+	"regexp"
+	"strings"
 	"tsBootstrup/internal/cmd"
 )
 
@@ -52,4 +54,22 @@ func UpdatePackageJSON(nodeType string) error {
 func RunProject(outputMode cmd.Output) {
 	err := cmd.Run(outputMode, "npm", "start")
 	cmd.Confirm(err, "npm start")
+}
+
+var npmNameRegexp = regexp.MustCompile(`^[a-z0-9]+([\-_.][a-z0-9]+)*$`)
+
+func IsValidName(name string) bool {
+	if len(name) == 0 || len(name) > 214 {
+		return false
+	}
+
+	if strings.HasPrefix(name, ".") {
+		return false
+	}
+
+	if strings.HasPrefix(name, "-") || strings.HasPrefix(name, "_") {
+		return false
+	}
+
+	return npmNameRegexp.MatchString(name)
 }

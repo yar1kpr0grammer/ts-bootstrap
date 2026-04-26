@@ -1,6 +1,7 @@
 package project
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"sync"
@@ -46,7 +47,17 @@ func Init(s Settings) error {
 }
 
 func prepareProjectDir() (string, error) {
-	name := cmd.Input(languages.Get("ask_project_name"))
+	name := ""
+
+	for {
+		name = cmd.Input(languages.Get("ask_project_name"))
+		if npm.IsValidName(name) {
+			break
+		} else {
+			err := errors.New(languages.Get("not_valid_npm_name"))
+			cmd.Error(err)
+		}
+	}
 
 	if name == "" {
 		name = "."
@@ -123,8 +134,7 @@ func ensureDirectoryReady() error {
 }
 
 func initBaseProject() error {
-	npm.Init(cmd.ShowOnlyErrors)
-	return nil
+	return npm.Init(cmd.ShowOnlyErrors)
 }
 
 func createFiles() error {

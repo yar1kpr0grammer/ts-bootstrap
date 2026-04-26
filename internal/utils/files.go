@@ -20,7 +20,7 @@ func FileExists(path string) bool {
 	return err == nil
 }
 
-func hasNonASCII(s string) bool {
+func HasNonASCII(s string) bool {
 	for _, r := range s {
 		if r > unicode.MaxASCII {
 			return true
@@ -37,7 +37,7 @@ func CheckPathForNPM() error {
 
 	parts := strings.Split(path, "/")
 	currentDir := parts[len(parts)-1]
-	if hasNonASCII(currentDir) {
+	if HasNonASCII(currentDir) {
 		return fmt.Errorf("invalid path part: %q", currentDir)
 	}
 

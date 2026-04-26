@@ -26,5 +26,6 @@
   "warning_prefix": "Warning:",
   "input_error": "Input error:",
   "yes_no_suffix": "[y/n]:",
-  "press_enter": "Press Enter to continue..."
+  "press_enter": "Press Enter to continue...",
+  "not_valid_npm_name": "This is not valid npm name"
 }
