@@ -5,7 +5,7 @@
   "ask_clear_dir": "Папка содержит файлы. Очистить её?",
   "directory_cleaned": "Папка очищена",
   "error_dir_not_empty": "Папка не пуста",
-  "ask_continue_not_empty": "Папка не пуста. Продолжить?",
+  "ask_continue_not_empty": "Папка содержит файлы. Очистить её?",
   "error_cancelled": "Операция отменена",
   "error_create_dir": "Не удалось создать папку",
   "error_open_dir": "Не удалось открыть папку",
@@ -18,6 +18,7 @@
   "now": "Теперь:",
   "init": "Инициализация",
   "error_blockade_found": "Найден blockade-файл",
+  "blockage_file_found": "tsBootstrup заблокирован в этой папке",
   "ask_clear_current_dir": "Очистить текущую папку?",
   "error_remove_current_dir": "Не удалось очистить текущую папку",
   "ask_create_project": "Создать проект?",
@@ -27,5 +28,7 @@
   "input_error": "Ошибка ввода:",
   "yes_no_suffix": "[д/н]:",
   "press_enter": "Нажмите Enter для продолжения...",
-  "not_valid_npm_name": "Это не правильное название для npm проекта"
+  "not_valid_npm_name": "Это не правильное название для npm проекта",
+  "not_valid_current_dir_name": "Название текущей папки не подходит для npm",
+  "readme_content": "# tsBootstrap\n***\n- Весь код в `src/index.ts`\n- Чтобы запустить: `npm start`\n\n[Исходный код](https://github.com/yar1kpr0grammer/ts-bootstrap)"
 }

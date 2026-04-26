@@ -1,13 +1,11 @@
 package config
 
 var BlockadeFileName = ".block_ts"
-var BlockadeMessage = "tsBootstrup is blocked in this directory"
 
 var NodeType = "module"
 var IndexFileContent = `let message:string = "Hello world"
 console.log(message)
 `
-var ReadMeContent = "Чтобы запустить: `npm start`\n\n[Исходный код](https://github.com/yar1kpr0grammer)"
 var TsconfigContent = `{
  "compilerOptions": {
    // File Layout

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"sync"
 
 	"tsBootstrup/internal/cmd"
@@ -46,36 +47,60 @@ func Init(s Settings) error {
 	return nil
 }
 
-func prepareProjectDir() (string, error) {
-	name := ""
+func inputProjectName() (string, error) {
+	var name string
 
 	for {
 		name = cmd.Input(languages.Get("ask_project_name"))
+
+		// Пустой ввод = текущая папка
+		if name == "" {
+			name = "."
+		}
+
+		// Использовать текущую папку
+		if name == "." {
+			dir, err := os.Getwd()
+			if err != nil {
+				return "", err
+			}
+
+			currentDirName := filepath.Base(dir)
+
+			if !npm.IsValidName(currentDirName) {
+				cmd.Error(errors.New(languages.Get("not_valid_current_dir_name")))
+				continue
+			}
+
+			return ".", nil
+		}
+
+		// Проверка npm имени новой папки
 		if npm.IsValidName(name) {
 			break
-		} else {
-			err := errors.New(languages.Get("not_valid_npm_name"))
-			cmd.Error(err)
 		}
-	}
 
-	if name == "" {
-		name = "."
+		cmd.Error(errors.New(languages.Get("not_valid_npm_name")))
 	}
+	return name, nil
+}
 
-	if name == "." {
-		return ".", os.Chdir(".")
+func prepareProjectDir() (string, error) {
+	name, err := inputProjectName()
+	if err != nil {
+		return "", err
 	}
 
 	info, err := os.Stat(name)
-
 	if os.IsNotExist(err) {
 		if err := os.Mkdir(name, 0755); err != nil {
-			return "", fmt.Errorf("%s: %w", languages.Get("error_create_dir"), err)
+			return "", fmt.Errorf("%s: %w",
+				languages.Get("error_create_dir"), err)
 		}
 
 		if err := os.Chdir(name); err != nil {
-			return "", fmt.Errorf("%s: %w", languages.Get("error_open_dir"), err)
+			return "", fmt.Errorf("%s: %w",
+				languages.Get("error_open_dir"), err)
 		}
 
 		cmd.Confirm(nil, languages.Get("created_project_dir"))
@@ -83,15 +108,18 @@ func prepareProjectDir() (string, error) {
 	}
 
 	if err != nil {
-		return "", fmt.Errorf("%s: %w", languages.Get("error_check_dir"), err)
+		return "", fmt.Errorf("%s: %w",
+			languages.Get("error_check_dir"), err)
 	}
 
 	if !info.IsDir() {
-		return "", fmt.Errorf("%s", languages.Get("error_not_directory"))
+		return "", fmt.Errorf("%s",
+			languages.Get("error_not_directory"))
 	}
 
 	if err := os.Chdir(name); err != nil {
-		return "", fmt.Errorf("%s: %w", languages.Get("error_open_dir"), err)
+		return "", fmt.Errorf("%s: %w",
+			languages.Get("error_open_dir"), err)
 	}
 
 	cmd.Warn(languages.Get("directory_exists"))
@@ -109,7 +137,8 @@ func prepareProjectDir() (string, error) {
 
 			cmd.Confirm(nil, languages.Get("directory_cleaned"))
 		} else {
-			return "", fmt.Errorf("%s", languages.Get("error_dir_not_empty"))
+			return "", fmt.Errorf("%s",
+				languages.Get("error_dir_not_empty"))
 		}
 	}
 
@@ -178,7 +207,7 @@ func applyOptionalFeatures(s Settings) error {
 	}
 
 	if s.CreateReadme {
-		utils.CreateReadMe(config.ReadMeContent)
+		utils.CreateReadMe(languages.Get("readme_content"))
 	}
 
 	return nil

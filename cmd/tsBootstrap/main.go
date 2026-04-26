@@ -1,8 +1,8 @@
 package main
 
 import (
+	"errors"
 	"flag"
-	"fmt"
 	"log"
 
 	"tsBootstrup/internal/cmd"
@@ -83,21 +83,15 @@ func initLanguage(lang string) {
 func main() {
 	f := parseFlags()
 
-	// сначала язык
 	initLanguage(f.Lang)
 
 	if utils.FileExists(config.BlockadeFileName) {
 		cmd.Confirm(
-			fmt.Errorf(languages.Get("error_blockade_found")),
-			config.BlockadeMessage,
+			errors.New(languages.Get("error_blockade_found")),
+			languages.Get("blockage_file_found"),
 		)
 		cmd.PressEnter()
 		return
-	}
-
-	// Non-ASCII path can break npm init
-	if err := utils.CheckPathForNPM(); err != nil {
-		cmd.Warn(err.Error())
 	}
 
 	// run mode

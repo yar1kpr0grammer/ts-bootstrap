@@ -18,6 +18,7 @@
   "now": "Now:",
   "init": "Initialization",
   "error_blockade_found": "Blockade file found",
+  "blockage_file_found": "tsBootstrup is blocked in this directory",
   "ask_clear_current_dir": "Clear current directory?",
   "error_remove_current_dir": "Failed to clear current directory",
   "ask_create_project": "Create project?",
@@ -27,5 +28,7 @@
   "input_error": "Input error:",
   "yes_no_suffix": "[y/n]:",
   "press_enter": "Press Enter to continue...",
-  "not_valid_npm_name": "This is not valid npm name"
+  "not_valid_npm_name": "This is not valid npm name",
+  "not_valid_current_dir_name": "Current directory name isn't valid for npm",
+  "readme_content": "# tsBootstrap\n***\n- Main file is `src/index.ts`\n- To run the project: `npm start`\n\n[Source code](https://github.com/yar1kpr0grammer/ts-bootstrap)"
 }
