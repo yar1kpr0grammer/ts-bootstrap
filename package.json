@@ -1,9 +1,9 @@
 {
 	"name": "ts-vibe",
-	"version": "1.4.0",
+	"version": "1.4.1",
 	"description": "CLI for quick TypeScript project bootstrap",
 	"bin": {
-		"ts-bootstrap": "./index.js"
+		"ts-vibe": "./index.js"
 	},
 	"files": [
 		"index.js",

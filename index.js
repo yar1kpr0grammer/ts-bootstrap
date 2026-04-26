@@ -9,18 +9,18 @@ const platform = os.platform();
 let binary;
 
 if (platform === "linux") {
-  binary = "tsBootstrap-linux";
+	binary = "ts-vibe-linux";
 } else if (platform === "win32") {
-  binary = "tsBootstrap-windows.exe";
+	binary = "ts-vibe-windows.exe";
 } else if (platform === "darwin") {
-  binary = "tsBootstrap-mac";
+	binary = "ts-vibe-mac";
 } else {
-  console.error("Unsupported OS");
-  process.exit(1);
+	console.error("Unsupported OS");
+	process.exit(1);
 }
 
 const binPath = path.join(__dirname, "bin", "release", binary);
 
 spawnSync(binPath, process.argv.slice(2), {
-  stdio: "inherit",
+	stdio: "inherit",
 });
