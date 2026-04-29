@@ -1,6 +1,6 @@
 # ts-vibe
 
-CLI tool for bootstrapping TypeScript projects
+CLI tool for bootstrapping TypeScript projects written on golang
 
 ---
 
@@ -10,8 +10,8 @@ CLI tool for bootstrapping TypeScript projects
 - Optional Git initialization
 - Automatic README generation
 - Path validation (prevents invalid/non-ASCII paths)
-- Run existing projects
 - Execution time tracking for operations
+- 🇷🇺 Ru / 🇺🇲 En languages support
 
 ---
 
@@ -20,7 +20,7 @@ CLI tool for bootstrapping TypeScript projects
 ### Create a new project
 
 ```bash
-npx ts-vibe init
+npx ts-vibe
 ```
 
 With Git:
@@ -59,7 +59,7 @@ npm start
 
 ## ⚠️ Requirements
 
-- Go 1.20+
+- Go 1.20+ (for build from source)
 - Node.js (for running TypeScript projects)
 - Git (optional)
 
@@ -72,3 +72,16 @@ npx ts-vibe init --git --lang=ru
 cd my-project
 npm start
 ```
+
+---
+
+## Buid from source
+
+Clone the source:
+[source](https://github.com/yar1kpr0grammer/ts-vibe)
+
+Run `Makefile` in the root dir:
+```bash
+make releace
+```
+it will compile go source to linux / mac / windows
