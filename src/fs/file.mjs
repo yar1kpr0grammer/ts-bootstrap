@@ -1,11 +1,14 @@
 import fsSync from "fs";
+import Path from "./path.mjs";
 
-function create(path, content) {
-  fsSync.writeFileSync(path, content);
+function create(filePath, content) {
+  const fullPath = Path.resolveProjectPath(filePath);
+  fsSync.writeFileSync(fullPath, content);
 }
 
-function append(path, content) {
-  fsSync.appendFileSync(path, content);
+function append(filePath, content) {
+  const fullPath = Path.resolveProjectPath(filePath);
+  fsSync.appendFileSync(fullPath, content);
 }
 
 export default { create, append };

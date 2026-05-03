@@ -6,8 +6,8 @@ import { closeInput } from "./src/cmd.mjs";
 
 function logInstructions(name) {
   console.log("\n--------------");
-  console.log(`\n\tcd ${name}`);
-  console.log(`\tnpm start\n`);
+  console.log(`\ncd ${name}`);
+  console.log(`npm start\n`);
   console.log("--------------");
 }
 

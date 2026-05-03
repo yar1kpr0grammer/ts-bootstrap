@@ -1,6 +1,6 @@
 import { radio, checkbox } from "../utils/cmd.mjs";
 import { input, ask } from "../cmd.mjs";
-import { read } from "../fs/json/index.mjs";
+import fs from "fs";
 import languageLib from "../utils/language.mjs";
 import Path from "../fs/path.mjs";
 import { checkProjectName } from "../npm.mjs";
@@ -52,7 +52,8 @@ export async function setupProject() {
   const name = await getName(language.enter_project_name);
   console.log();
 
-  const config = read("config.json");
+  const configPath = Path.resolveCliPath("config.json");
+  const config = JSON.parse(fs.readFileSync(configPath, "utf-8"));
   await prepareDir(name, language);
 
   const allOptions = ["git", "eslint", "prettier", "README.md", "node"];
