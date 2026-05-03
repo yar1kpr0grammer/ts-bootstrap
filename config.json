@@ -1,0 +1,12 @@
+{
+	"default_code": {
+		"indexTs": "let a: string = \"Hello, Typescript!\";\nconsole.log(a);",
+		"eslintConfig": "import js from \"@eslint/js\";\nimport tseslint from \"typescript-eslint\";\nimport prettier from \"eslint-config-prettier\";\n\nexport default [\n  js.configs.recommended,\n  ...tseslint.configs.recommended,\n  prettier,\n  {\n    rules: {\n      \"no-unused-vars\": \"warn\"\n    }\n  }\n];",
+		"prettierrc": "{\n  \"semi\": true,\n  \"singleQuote\": true,\n  \"printWidth\": 80\n}"
+	},
+	"ignores": {
+		"git": "node_modules\ndist\n.env\n.vscode\n.idea\n*.log\ncoverage",
+		"eslint": "node_modules\ndist",
+		"prettier": "node_modules\ndist"
+	}
+}

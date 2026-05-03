@@ -1,26 +1,20 @@
 #!/usr/bin/env node
 
-const os = require("os");
-const path = require("path");
-const { spawnSync } = require("child_process");
+import { init } from "./src/project/index.mjs";
+import { setupProject } from "./src/project/setup.mjs";
+import { closeInput } from "./src/cmd.mjs";
 
-const platform = os.platform();
-
-let binary;
-
-if (platform === "linux") {
-	binary = "ts-vibe-linux";
-} else if (platform === "win32") {
-	binary = "ts-vibe-windows.exe";
-} else if (platform === "darwin") {
-	binary = "ts-vibe-mac";
-} else {
-	console.error("Unsupported OS");
-	process.exit(1);
+function logInstructions(name) {
+  console.log("\n--------------");
+  console.log(`\n\tcd ${name}`);
+  console.log(`\tnpm start\n`);
+  console.log("--------------");
 }
 
-const binPath = path.join(__dirname, "bin", "release", binary);
-
-spawnSync(binPath, process.argv.slice(2), {
-	stdio: "inherit",
-});
+async function main() {
+  const { name, language, config } = await setupProject();
+  closeInput();
+  await init(language, config);
+  logInstructions(name);
+}
+main().catch(console.error);

@@ -1,13 +1,27 @@
 {
-	"name": "ts-vibe",
-	"version": "1.4.1",
-	"description": "CLI for quick TypeScript project bootstrap",
-	"bin": {
-		"ts-vibe": "./index.js"
-	},
-	"files": [
-		"index.js",
-		"bin/release"
-	],
-	"license": "MIT"
+  "name": "ts-vibe",
+  "version": "2.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "ts-vibe": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "files": [
+    "languages",
+    "src",
+    "config.json",
+    "index.js"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@inquirer/checkbox": "^5.1.4",
+    "@inquirer/prompts": "^8.4.2",
+    "chalk": "^5.6.2",
+    "json5": "^2.2.3"
+  }
 }

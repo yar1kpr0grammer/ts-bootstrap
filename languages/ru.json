@@ -1,0 +1,22 @@
+{
+  "success": "Успех",
+  "error": "Ошибка",
+  "choose_node_type": "Выберите тип Nodejs",
+  "update_ts_config": "Обновление tsconfig.json",
+  "update_package": "Обновление package.json",
+  "create_readme": "Создание README.md",
+  "question_prompt": "[д/н]",
+  "confirm_variants": ["y", "yes", "д", "да"],
+  "enter_project_name": "Введите название проекта: ",
+  "name_not_valid": "Не правильное",
+  "dir_is_not_empty": "Папка не пуста. Очистить? ",
+  "lint_tip": "- Чтобы запустить проверку ошибок: `npm lint`\n",
+  "prettier_tip": "- Чтобы отформатировать код: `npm prettier`\n",
+  "readme_content": "# ts-vibe\n[Исходный код](https://github.com/yar1kpr0grammer/ts-bootstrap)\n\n***\n**Главный файл:** `src/index.ts`\n\n- Чтобы запустить проект: `npm start`\n",
+  "use_git": "Использовать git?",
+  "choose_project_template": "Выберите вариант проекта:",
+  "template_min": "Минимальный",
+  "template_max": "Максимальный",
+  "template_custom": "Настраиваемый",
+  "choose_packages": "Выберете что добавить в проект:"
+}
