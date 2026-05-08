@@ -10,7 +10,7 @@ export function readConfig() {
 
 export function updateTsConfig() {
   if (!config) {
-    readConfig(); // автоматически читаем, если еще не прочитан
+    readConfig();
   }
 
   if (!config) {
@@ -24,7 +24,7 @@ export function updateTsConfig() {
 
 export function addType(typeName) {
   if (!config) {
-    readConfig(); // автоматически читаем, если еще не прочитан
+    readConfig();
   }
 
   if (!config) {

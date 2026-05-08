@@ -10,7 +10,7 @@
   "enter_project_name": "Enter project name: ",
   "name_not_valid": "Not valid",
   "dir_is_not_empty": "Dir isn't empty. Clear? ",
-  "lint_tip": "- To lint the project: `npm lint`\n",
+  "lint_tip": "- To lint the project: `npm run lint`\n",
   "prettier_tip": "- To format the code: `npm prettier`\n",
   "readme_content": "# ts-vibe\n[Source code](https://github.com/yar1kpr0grammer/ts-vibe)\n\n***\n**Main file** is `src/index.ts`\n\n- To run the project: `npm start`\n",
   "use_git": "Use git?",

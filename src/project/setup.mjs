@@ -24,7 +24,7 @@ export async function getName(
 }
 
 export async function chooseNodeType(language) {
-  return await radio(language.choose_node_type, ["commonjs", "module"]);
+  return await radio(language.choose_node_type, ["module", "commonjs"]);
 }
 
 export async function prepareDir(path, language) {
@@ -68,7 +68,7 @@ export async function setupProject() {
       config.options = allOptions;
       break;
     case language.template_min:
-      config.options = [];
+      config.options = ["README.md"];
       break;
     case language.template_custom:
       config.options = await checkbox(

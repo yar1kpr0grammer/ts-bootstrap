@@ -38,7 +38,7 @@ async function setupLint(language, config) {
       exec(
         "npm i -D eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-config-prettier",
       ),
-    "Install eslint",
+    "npm i -D eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-config-prettier",
     language.success,
     language.error,
   );
@@ -53,7 +53,7 @@ async function setupPrettier(language, config) {
   File.create(".prettierignore", config.ignores.prettier);
   await confirm(
     () => exec("npm i -D  prettier "),
-    "Install prettier",
+    "npm i -D  prettier",
     language.success,
     language.error,
   );
@@ -77,19 +77,19 @@ async function setupNode(language) {
       await exec("npm i -D @types/node");
       ts.addType("node");
     },
-    "Add node",
+    "npm i -D @types/node",
     language.success,
     language.error,
   );
 }
 export async function init(language, config) {
   const commands = [
-    { command: "npm init -y", message: "npm project init" },
+    { command: "npm init -y", message: "npm init -y" },
     {
       command: "npm i -D typescript",
-      message: "install typescript",
+      message: "npm i -D typescript",
     },
-    { command: "npx tsc --init", message: "init typescript" },
+    { command: "npx tsc --init", message: "npx tsc --init" },
   ];
 
   for (const cmd of commands) {
