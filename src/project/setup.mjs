@@ -1,6 +1,8 @@
 import { radio, checkbox } from "../utils/cmd.mjs";
 import { input, ask } from "../cmd.mjs";
 import fs from "fs";
+import path from "path";
+
 import languageLib from "../utils/language.mjs";
 import Path from "../fs/path.mjs";
 import { checkProjectName } from "../npm.mjs";
@@ -12,36 +14,55 @@ export async function getName(
 ) {
   process.stdin.setRawMode(false);
   process.stdin.resume();
-  let name;
+
   while (true) {
-    name = await input(prompt);
-    if (checkProjectName(name)) {
-      break;
+    const value = await input(prompt);
+
+    // "." означает текущую папку
+    if (value === ".") {
+      const currentDirName = path.basename(process.cwd());
+
+      if (checkProjectName(currentDirName)) {
+        return {
+          name: currentDirName,
+          dir: ".",
+        };
+      }
+
+      console.log(error);
+      continue;
     }
+
+    if (checkProjectName(value)) {
+      return {
+        name: value,
+        dir: value,
+      };
+    }
+
     console.log(error);
   }
-  return name;
 }
 
 export async function chooseNodeType(language) {
   return await radio(language.choose_node_type, ["module", "commonjs"]);
 }
 
-export async function prepareDir(path, language) {
-  if (!Path.exists(path)) {
-    Dir.create(path);
+export async function prepareDir(dirPath, language) {
+  if (!Path.exists(dirPath)) {
+    Dir.create(dirPath);
   }
 
-  Path.cd(path);
+  Path.cd(dirPath);
 
   if (await Dir.hasFiles()) {
-    if (
-      await ask(
-        language.dir_is_not_empty,
-        language.question_prompt,
-        language.confirm_variants,
-      )
-    ) {
+    const shouldClear = await ask(
+      language.dir_is_not_empty,
+      language.question_prompt,
+      language.confirm_variants,
+    );
+
+    if (shouldClear) {
       await Dir.clear();
     }
   }
@@ -49,27 +70,37 @@ export async function prepareDir(path, language) {
 
 export async function setupProject() {
   const language = languageLib.init(languageLib.choose());
-  const name = await getName(language.enter_project_name);
+
+  const { name, dir } = await getName(language.enter_project_name);
+
   console.log();
 
   const configPath = Path.resolveCliPath("config.json");
+
   const config = JSON.parse(fs.readFileSync(configPath, "utf-8"));
-  await prepareDir(name, language);
+
+  // Используем dir, а не name
+  await prepareDir(dir, language);
 
   const allOptions = ["git", "eslint", "prettier", "README.md", "node"];
+
   console.log();
-  const res = await radio("Выберите вариант проекта:", [
+
+  const template = await radio("Выберите вариант проекта:", [
     language.template_min,
     language.template_max,
     language.template_custom,
   ]);
-  switch (res) {
+
+  switch (template) {
     case language.template_max:
       config.options = allOptions;
       break;
+
     case language.template_min:
       config.options = ["README.md"];
       break;
+
     case language.template_custom:
       config.options = await checkbox(
         language.choose_project_template,
@@ -77,10 +108,17 @@ export async function setupProject() {
       );
       break;
   }
+
   console.log();
 
   config.nodeType = await chooseNodeType(language);
+
   console.log();
 
-  return { name, language, config };
+  return {
+    name,
+    language,
+    config,
+    dir,
+  };
 }

@@ -52,7 +52,7 @@ async function setupPrettier(language, config) {
   File.create(".prettierrc", config.default_code.prettierrc);
   File.create(".prettierignore", config.ignores.prettier);
   await confirm(
-    () => exec("npm i -D  prettier "),
+    () => exec("npm i -D prettier "),
     "npm i -D  prettier",
     language.success,
     language.error,
