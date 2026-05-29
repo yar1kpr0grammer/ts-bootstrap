@@ -79,10 +79,9 @@ export async function setupProject() {
 
   const config = JSON.parse(fs.readFileSync(configPath, "utf-8"));
 
-  // Используем dir, а не name
   await prepareDir(dir, language);
-
-  const allOptions = ["git", "eslint", "prettier", "README.md", "node"];
+  const recommendedOptions = ["git", "README.md", "node", "src dir @ alias"];
+  const allOptions = [...recommendedOptions, "eslint", "prettier"];
 
   console.log();
 
@@ -93,7 +92,7 @@ export async function setupProject() {
 
   switch (template) {
     case language.template_recommended:
-      config.options = ["git", "README.md", "node"];
+      config.options = recommendedOptions;
       config.nodeType = "module";
       break;
 

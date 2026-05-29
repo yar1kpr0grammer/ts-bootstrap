@@ -104,7 +104,7 @@ export async function init(language, config) {
   ts.readConfig();
 
   await confirm(
-    ts.updateTsConfig,
+    () => ts.updateTsConfig(config),
     language.update_ts_config,
     language.success,
     language.error,

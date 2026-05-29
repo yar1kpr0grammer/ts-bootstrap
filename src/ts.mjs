@@ -1,63 +1,100 @@
 import { read } from "./fs/json/json5.mjs";
 import { write } from "./fs/json/index.mjs";
 
-let config = null;
+let tsConfig = null;
 
 export function readConfig() {
-  config = read("tsconfig.json");
-  return config;
+  tsConfig = read("tsconfig.json");
+  return tsConfig;
 }
 
-export function updateTsConfig() {
-  if (!config) {
+export function updateTsConfig(projectConfig) {
+  if (!tsConfig) {
     readConfig();
   }
 
-  if (!config) {
+  if (!tsConfig) {
     throw new Error("tsconfig.json not found");
   }
 
-  const options = (config.compilerOptions ??= {});
+  const options = (tsConfig.compilerOptions ??= {});
 
-  options.rootDir = "./src"; // source code in src dir
-  options.outDir = "./dist"; // code output in dist dir
-  options.lib = ["ESNext"]; // adds modern JS API
-  options.esModuleInterop = true; // more comfortable imports
+  // shared options
+  options.rootDir = "./src";
+  options.outDir = "./dist";
+
+  options.target = "ES2020";
+
+  if (projectConfig.options.includes("node")) {
+    options.types = ["node"];
+  }
+
+  options.sourceMap = true;
+
+  options.strict = true;
+  options.noUncheckedIndexedAccess = true;
+  options.exactOptionalPropertyTypes = true;
+
+  options.resolveJsonModule = true;
+  options.forceConsistentCasingInFileNames = true;
+
+  options.skipLibCheck = true;
+
+  options.esModuleInterop = true;
   options.allowSyntheticDefaultImports = true;
-  options.resolveJsonModule = true; // allows to import JSON files
-  options.forceConsistentCasingInFileNames = true; // strict file names in imports
-  options.moduleResolution = "bundler"; // allows to use bundlers
-  options.module = "esnext"; // ts generates modern ESM
 
-  // @ in imports as src dir
-  options.baseUrl = ".";
-  options.paths ??= {};
-  options.paths["@/*"] = ["src/*"];
+  // alias @ -> src
+  if (projectConfig.options.includes("src dir @ alias")) {
+    options.baseUrl = ".";
+    options.paths ??= {};
+    options.paths["@/*"] = ["src/*"];
+  }
 
+  // cleanup
   delete options.verbatimModuleSyntax;
   delete options.moduleDetection;
   delete options.noUncheckedSideEffectImports;
   delete options.declaration;
   delete options.declarationMap;
 
-  write("tsconfig.json", config);
+  if (projectConfig.nodeType === "module") {
+    // ESM
+    options.lib = ["ESNext"];
+
+    options.module = "esnext";
+    options.moduleResolution = "bundler";
+  } else {
+    // CommonJS
+    options.lib = ["ES2020"];
+
+    options.module = "commonjs";
+    options.moduleResolution = "node";
+  }
+
+  write("tsconfig.json", tsConfig);
 }
 
 export function addType(typeName) {
-  if (!config) {
+  if (!tsConfig) {
     readConfig();
   }
 
-  if (!config) {
+  if (!tsConfig) {
     throw new Error("tsconfig.json not found");
   }
 
-  if (!config.compilerOptions.types) {
-    config.compilerOptions.types = [];
+  const options = (tsConfig.compilerOptions ??= {});
+  options.types ??= [];
+
+  if (!options.types.includes(typeName)) {
+    options.types.push(typeName);
   }
 
-  config.compilerOptions.types.push(typeName);
-  write("tsconfig.json", config);
+  write("tsconfig.json", tsConfig);
 }
 
-export default { readConfig, updateTsConfig, addType };
+export default {
+  readConfig,
+  updateTsConfig,
+  addType,
+};
