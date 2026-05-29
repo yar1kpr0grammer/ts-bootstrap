@@ -10,7 +10,10 @@ export function updatePackageJSON(nodeType) {
   const config = getPackageConfig();
 
   config.scripts ??= {};
-  config.scripts.start = "tsc && node dist/index.js";
+  config.scripts.dev = "tsx watch src/index.ts";
+  config.scripts.start = "tsx src/index.ts";
+  config.scripts.build = "tsc";
+  config.scripts.prod = "node dist/index.js";
   config.type = nodeType;
 
   json.write(PACKAGE_PATH, config);

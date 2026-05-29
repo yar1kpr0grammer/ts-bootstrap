@@ -12,11 +12,9 @@
   "dir_is_not_empty": "Папка не пуста. Очистить? ",
   "lint_tip": "- Чтобы запустить проверку ошибок: `npm run lint`\n",
   "prettier_tip": "- Чтобы отформатировать код: `npm run prettier`\n",
-  "readme_content": "# ts-vibe\n[Исходный код](https://github.com/yar1kpr0grammer/ts-bootstrap)\n\n***\n**Главный файл:** `src/index.ts`\n\n- Чтобы запустить проект: `npm start`\n",
-  "use_git": "Использовать git?",
+  "readme_content": "# ts-vibe\n[Исходный код](https://github.com/yar1kpr0grammer/ts-vibe)\n\n***\n\n**Главный файл:** `src/index.ts`\n\n## Скрипты\n\n| Команда | Описание |\n|---|---|\n| `npm run dev` | Запускает проект в режиме разработки с автоматической перезагрузкой |\n| `npm start` | Запускает проект один раз через tsx |\n| `npm run build` | Компилирует TypeScript-файлы в папку `dist` |\n| `npm run prod` | Запускает production-сборку из папки `dist` |\n\n\n## Структура проекта\n\n```txt\nsrc/   - исходный код\ndist/  - скомпилированный JavaScript\n```\n",
   "choose_project_template": "Выберите вариант проекта:",
-  "template_min": "Минимальный",
-  "template_max": "Максимальный",
-  "template_custom": "Настраиваемый",
+  "template_recommended": "Рекомендуемый",
+  "template_custom": "Настроить самостоятельно",
   "choose_packages": "Выберете что добавить в проект:"
 }

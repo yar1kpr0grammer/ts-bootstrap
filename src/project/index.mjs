@@ -86,7 +86,7 @@ export async function init(language, config) {
   const commands = [
     { command: "npm init -y", message: "npm init -y" },
     {
-      command: "npm i -D typescript",
+      command: "npm i -D typescript tsx @types/node",
       message: "npm i -D typescript",
     },
     { command: "npx tsc --init", message: "npx tsc --init" },

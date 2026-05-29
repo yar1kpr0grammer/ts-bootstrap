@@ -87,18 +87,14 @@ export async function setupProject() {
   console.log();
 
   const template = await radio("Выберите вариант проекта:", [
-    language.template_min,
-    language.template_max,
+    language.template_recommended,
     language.template_custom,
   ]);
 
   switch (template) {
-    case language.template_max:
-      config.options = allOptions;
-      break;
-
-    case language.template_min:
-      config.options = ["README.md"];
+    case language.template_recommended:
+      config.options = ["git", "README.md", "node"];
+      config.nodeType = "module";
       break;
 
     case language.template_custom:
@@ -106,12 +102,10 @@ export async function setupProject() {
         language.choose_project_template,
         allOptions,
       );
+      console.log();
+      config.nodeType = await chooseNodeType(language);
       break;
   }
-
-  console.log();
-
-  config.nodeType = await chooseNodeType(language);
 
   console.log();
 

@@ -12,11 +12,9 @@
   "dir_is_not_empty": "Dir isn't empty. Clear? ",
   "lint_tip": "- To lint the project: `npm run lint`\n",
   "prettier_tip": "- To format the code: `npm prettier`\n",
-  "readme_content": "# ts-vibe\n[Source code](https://github.com/yar1kpr0grammer/ts-vibe)\n\n***\n**Main file** is `src/index.ts`\n\n- To run the project: `npm start`\n",
-  "use_git": "Use git?",
+  "readme_content": "# ts-vibe\n[Source code](https://github.com/yar1kpr0grammer/ts-vibe)\n\n***\n\n**Main file:** `src/index.ts`\n\n## Scripts\n\n| Command | Description |\n|---|---|\n| `npm run dev` | Starts the project in development mode with watch enabled |\n| `npm start` | Runs the project once using tsx |\n| `npm run build` | Compiles TypeScript files into the `dist` folder |\n| `npm run prod` | Runs the compiled production build |\n\n\n## Project Structure\n\n```txt\nsrc/   - source code\ndist/  - compiled JavaScript output\n```\n",
   "choose_project_template": "Choose project template:",
-  "template_min": "Minimal",
-  "template_max": "Maximal",
+  "template_recommended": "Recommended",
   "template_custom": "Custom",
   "choose_packages": "Choose options:"
 }
