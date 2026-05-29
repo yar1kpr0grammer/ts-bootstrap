@@ -86,7 +86,7 @@ export async function setupProject() {
 
   console.log();
 
-  const template = await radio("Выберите вариант проекта:", [
+  const template = await radio(language.choose_project_template, [
     language.template_recommended,
     language.template_custom,
   ]);
